@@ -63,7 +63,7 @@ export class MyComponent extends HTMLElement {
 
   changeCode(code) {
     console.log("code changé dans changeCode, on fait setAttribute qui va déclencher un appel à attributeChangedCallback")
-    // IMPORTANT : rappel, l'attribut doit être en minuscule !
+    // IMPORTANT : rappel, l'attribut doit être en minuscules !
     this.setAttribute('correctcode', code);
   }
 
