@@ -1,3 +1,5 @@
+import "./libs/webaudiocontrols.js";
+
 const getBaseURL = () => {
   return new URL('.', import.meta.url);
 };
@@ -37,7 +39,26 @@ export class MyComponent extends HTMLElement {
         cursor: pointer;
       }
     </style>
-    <img src="./images/chat.jpg" width=200>
+    <img src="./images/chat.jpg" width=20>
+   
+    <webaudio-switch src="./images/switches/switch1.png" 
+        value="0" height="56" width="56" 
+        tooltip="Switch-A Tooltip text test">
+    </webaudio-switch>
+   
+    <webaudio-knob id="knob1"  
+                src="./images/knobs/LittlePhatty.png" 
+                value="50" step="1" 
+                diameter="64" 
+                tooltip="Knob1 tooltip %d">
+    </webaudio-knob>
+    <webaudio-knob id="knob1"  
+    src="./images/knobs/boutonVert.png" 
+           value="50" step="1" 
+            diameter="64" 
+           tooltip="Knob1 tooltip %d">
+</webaudio-knob>
+
     <div class="keypad">
       <div id="div1" class="key" data-key="49">1</div>
       <div class="key" data-key="50">2</div>
@@ -74,13 +95,13 @@ export class MyComponent extends HTMLElement {
   }
 
   changeRelativeURLsToAbsolute() {
-    let images = this.shadowRoot.querySelectorAll('img');
+    let elements = this.shadowRoot.querySelectorAll('img, webaudio-knob, webaudio-switch');
     
-    images.forEach((e) => {
-      let imagePath = e.getAttribute('src');
+    elements.forEach((e) => {
+      let elementPath = e.getAttribute('src');
       // if the image path isn't already absolute, make it absolute
-      if (imagePath.indexOf('://') === -1)
-        e.src = getBaseURL() + '/' + imagePath;
+      if (elementPath.indexOf('://') === -1)
+        e.src = getBaseURL() + '/' + elementPath;
     });
 
   }
