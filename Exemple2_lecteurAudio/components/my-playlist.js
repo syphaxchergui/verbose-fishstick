@@ -4,18 +4,18 @@ const template = `
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: start;
       background-color: #000;
       color: #fff;
       padding: 20px;
       border-radius: 5px;
       width: 100%; 
-      flex-grow: 1;
+      height: 100%;
   }
 
   .subContainer {
     display: flex;
-      align-items: start;
+      align-items: center;
       justify-content: start;
       padding: 20px;
       border-radius: 5px;
@@ -24,9 +24,25 @@ const template = `
   }
 
   .music {
-    margin-bottom: 10px;
-    margin-top: 5px;
+    margin-bottom: 5px;
     cursor: pointer;
+    padding: 5px;
+    width: 100%;
+  }
+
+  .music:hover {
+    opacity: 0.7;
+  }
+
+  .active {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+    width: 100%;
   }
 
 
@@ -49,10 +65,12 @@ class MyPlaylist extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = template;
-    this.list = './assets/audio/CleanGuitarRiff.mp3,./assets/audio/Test.mp3,./assets/audio/sample-15s.mp3'
-    this.currentMusic = './assets/audio/CleanGuitarRiff.mp3'
-    this.buildList()
-  } 
+    this.list =
+      "./assets/audio/CleanGuitarRiff.mp3,./assets/audio/Test.mp3,./assets/audio/sample-15s.mp3";
+    this.currentMusic = "./assets/audio/CleanGuitarRiff.mp3";
+    this.playlist = this.list.split(",");
+    this.buildList();
+  }
 
   getPlaylist() {
     return this.list;
@@ -60,13 +78,25 @@ class MyPlaylist extends HTMLElement {
 
   buildList() {
     let list = this.getPlaylist();
-    let listArray = list.split(',');
-    let listDiv = this.shadowRoot.querySelector('.subContainer');
-    listArray.forEach(element => {
-      let div = document.createElement('div');
-      div.innerHTML = element?.split('/').pop();
-      div.classList.add('music');
-      div.onclick = () => {this.currentMusic = element; this.dispatchEvent(new CustomEvent('changeMusic', {detail: element})); console.log(element)}
+    let listArray = list.split(",");
+    let listDiv = this.shadowRoot.querySelector(".subContainer");
+    listDiv.innerHTML = "";
+
+    listArray.forEach((element) => {
+      let div = document.createElement("div");
+      div.innerHTML = element?.split("/").pop().split(".")[0];
+      div.classList.add("music");
+      if (element === this.currentMusic) {
+        div.classList.add("active");
+      }
+      div.onclick = () => {
+        this.currentMusic = element;
+        this.dispatchEvent(new CustomEvent("changeMusic", { detail: element }));
+        listDiv
+          .querySelectorAll(".music")
+          .forEach((el) => el.classList.remove("active"));
+        div.classList.add("active");
+      };
       listDiv.appendChild(div);
     });
   }
@@ -77,8 +107,51 @@ class MyPlaylist extends HTMLElement {
 
   setCurrentMusic(music) {
     this.currentMusic = music;
+    this.dispatchEvent(
+      new CustomEvent("changeMusic", { detail: this.currentMusic })
+    );
+    this.buildList();
   }
-  
+
+  next() {
+    this.setCurrentMusic(this.getNextMusic());
+  }
+
+  prev() {
+    this.setCurrentMusic(this.getPrevMusic());
+  }
+
+  getNextMusic() {
+    let nextIndex = 0;
+    for (let i = 0; i < this.playlist.length; i++) {
+      if (
+        this.playlist[i].split("/").pop() === this.currentMusic.split("/").pop()
+      ) {
+        nextIndex = i + 1;
+        if (nextIndex >= this.playlist.length) {
+          nextIndex = 0;
+        }
+        break;
+      }
+    }
+    return this.playlist[nextIndex];
+  }
+
+  getPrevMusic() {
+    let prevIndex = 0;
+    for (let i = 0; i < this.playlist.length; i++) {
+      if (
+        this.playlist[i].split("/").pop() === this.currentMusic.split("/").pop()
+      ) {
+        prevIndex = i - 1;
+        if (prevIndex < 0) {
+          prevIndex = this.playlist.length - 1;
+        }
+        break;
+      }
+    }
+    return this.playlist[prevIndex];
+  }
 }
 
 customElements.define("my-playlist", MyPlaylist);

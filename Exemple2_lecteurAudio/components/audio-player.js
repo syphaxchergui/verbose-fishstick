@@ -14,12 +14,12 @@ const template = `
        
   }
   button {
-      padding: 5px;
+      padding: 5px 10px;
       border-radius: 5px;
       border: 0.5px solid #ccc;
       background-color: #fff;
       cursor: pointer;
-      width: 100px;
+      width: 55px;
   }
   .progressBarClass {
       display: flex;
@@ -132,7 +132,7 @@ const template = `
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
-    gap: 10px;
+    gap: 8px;
   }
 
   .button-group > button{
@@ -141,19 +141,20 @@ const template = `
     justify-content: center;
     gap: 5px;
   }
+
+  #myCanvas {
+    border:1px solid;
+  }
 </style>
 <div class='container'>   
-    <p style="font-size: 20px; font-weight: bold;">Audio Player</p>
+    <p style="font-size: 20px; font-weight: bold;" id="title">Audio Player</p>
  
     <div class="button-group">
-        <button id="prec">
+        <button id="prev">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M10.354 3.646a.5.5 0 0 1 0 .708L6.707 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0z"/>
             </svg>\
-            Prec
         </button>
-
-      
 
         <button id="substractFive">
             - 5s
@@ -162,21 +163,19 @@ const template = `
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
               <path d="M4.905 14.21a1 1 0 0 1-1.578-.814l7-5a1 1 0 0 1 0-1.592l-7-5A1 1 0 0 1 4 3v10a1 1 0 0 1 .905 1.21z"/>
             </svg>
-            Play
+
         </button>
         <button id="pause">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
               <rect width="4" height="12" x="3" y="2" rx="1"/>
               <rect width="4" height="12" x="9" y="2" rx="1"/>
             </svg>
-            Pause
         </button>
         <button id="addFive">
             + 5s
         </button>    
         
         <button id="next">
-        Next
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M5.646 3.646a.5.5 0 0 0 0 .708L9.293 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0z"/>
       </svg>
@@ -232,8 +231,7 @@ class AudioPlayer extends HTMLElement {
     this.shadowRoot.innerHTML = template;
 
     this.audioContext = new AudioContext();
-    this.playlist = this.getAttribute("playlist")?.split(",") || [];
-    console.log(this.playlist);
+    this.playlist = [];
     this.audio = new Audio(this.playlist[0]);
   }
 
@@ -282,27 +280,11 @@ class AudioPlayer extends HTMLElement {
     });
 
     this.shadowRoot.querySelector("#next").addEventListener("click", () => {
-      this.next()
+      this.next();
     });
 
-    this.shadowRoot.querySelector("#prec").addEventListener("click", () => {
-      let prevIndex = 0;
-      for (let i = 0; i < this.playlist.length; i++) {
-        if (
-          this.playlist[i].split("assets")[1] ===
-          this.audio.src.split("assets")[1]
-        ) {
-          prevIndex = i - 1;
-          if (prevIndex < 0) {
-            prevIndex = this.playlist.length - 1;
-          }
-          break;
-        }
-      }
-      console.log(prevIndex);
-      this.audio.src = this.playlist[prevIndex];
-      this.audio.currentTime = 0;
-      this.audio.play();
+    this.shadowRoot.querySelector("#prev").addEventListener("click", () => {
+      this.prev();
     });
 
     this.shadowRoot
@@ -313,6 +295,11 @@ class AudioPlayer extends HTMLElement {
           (this.shadowRoot.querySelector("#progressBar").value / 100) *
           this.audio.duration;
       });
+
+    this.audio.addEventListener("ended", () => {
+      this.audio.currentTime = 0;
+      this.next();
+    });
   }
 
   buildGraph() {
@@ -326,7 +313,19 @@ class AudioPlayer extends HTMLElement {
 
     this.pannerNode = this.audioContext.createStereoPanner();
     pannerMediaElementSource.connect(this.pannerNode);
-    this.pannerNode.connect(this.audioContext.destination);
+    //this.pannerNode.connect(this.audioContext.destination);
+
+    // Create an this.analyser node
+    this.analyser = this.audioContext.createAnalyser();
+
+    // Try changing for lower values: 512, 256, 128, 64...
+    this.analyser.fftSize = 1024;
+    bufferLength = this.analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    this.pannerNode.connect(this.analyser);
+
+    this.analyser.connect(this.audioContext.destination);
 
     this.shadowRoot.querySelector("#balance").addEventListener("input", () => {
       //change the audio balance
@@ -335,29 +334,12 @@ class AudioPlayer extends HTMLElement {
     });
   }
 
-  next(){
-    let nextIndex = 0;
-    for (let i = 0; i < this.playlist.length; i++) {
-      if (
-        this.playlist[i].split("assets")[1] ===
-        this.audio.src.split("assets")[1]
-      ) {
-        nextIndex = i + 1;
-        if (nextIndex >= this.playlist.length) {
-          nextIndex = 0;
-        }
-        break;
-      }
-    }
-  
-    this.audio.src = this.playlist[nextIndex];
-    this.audio.currentTime = 0;
-    this.audio.play();
+  next() {
+    this.dispatchEvent(new CustomEvent("nextTrack"));
+  }
 
-    this.audio.addEventListener("ended", () => {
-      this.audio.currentTime = 0;
-      this.next()
-    })
+  prev() {
+    this.dispatchEvent(new CustomEvent("prevTrack"));
   }
 
   getHTMLAudioElement() {
@@ -368,36 +350,34 @@ class AudioPlayer extends HTMLElement {
     return this.audioContext;
   }
 
-  static get observedAttributes() {
-    return ['src', 'playlist'];
+  setPlaylist(playlist) {
+    this.playlist = playlist?.split(",") || [];
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'src' && oldValue !== newValue) {
-      this.audio.src = newValue;
-      this.audio.currentTime = 0;
-      this.audio.play();
-    }
+  setSrc(src) {
+    this.audio.src = src;
+    this.audio.currentTime = 0;
+    this.audio.play();
 
-    if (name === 'playlist' && oldValue !== newValue) {
-      this.playlist = newValue?.split(",") || [];
-    }
+    this.shadowRoot.querySelector("#title").innerHTML = src
+      .split("/")
+      .pop()
+      .split(".")[0];
   }
 
   connectCustomNode(node) {
-    console.log(node);
     this.pannerNode.disconnect();
     this.pannerNode.connect(node);
     node.connect(this.audioContext.destination);
   }
 }
 
-
-
 function formatSecondsToMinutes(seconds) {
   return `${Math.floor(seconds / 60)}:${
     seconds > 9 ? Math.floor(seconds % 60) : `0${Math.floor(seconds % 60)}`
   }`;
 }
+
+
 
 customElements.define("audio-player", AudioPlayer);

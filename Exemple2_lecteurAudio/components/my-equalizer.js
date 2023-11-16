@@ -4,12 +4,13 @@ const template = `
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: start;
       background-color: #000;
       color: #fff;
       padding: 20px;
       border-radius: 5px;
       max-width: 400px;
+      height: 100%;
   }
 
   .subContainer {
@@ -144,11 +145,11 @@ class MyEqualizer extends HTMLElement {
   }
 
   getContext() {
-    return this.audioCtx ;
+    return this.audioCtx;
   }
 
   getInput() {
-    console.log(this.filters[0])
+    console.log(this.filters[0]);
     return this.filters[0];
   }
 
