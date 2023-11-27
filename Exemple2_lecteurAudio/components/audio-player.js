@@ -3,15 +3,16 @@ import "./libs/webaudiocontrols.js";
 const template = `
 <style>
   .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: #000;
-      color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-       
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #000;
   }
   button {
       padding: 5px 10px;
@@ -307,15 +308,14 @@ class AudioPlayer extends HTMLElement {
       this.audioContext.resume();
     });
 
-    let pannerMediaElementSource = this.audioContext.createMediaElementSource(
+    let lecteurAudioNode = this.audioContext.createMediaElementSource(
       this.audio
     );
 
     this.pannerNode = this.audioContext.createStereoPanner();
-    pannerMediaElementSource.connect(this.pannerNode);
+    lecteurAudioNode.connect(this.pannerNode);
     this.pannerNode.connect(this.audioContext.destination);
 
-    // Create an analyser node
     this.analyser = this.audioContext.createAnalyser();
 
     this.analyser.fftSize = 1024;
@@ -324,7 +324,9 @@ class AudioPlayer extends HTMLElement {
 
     this.pannerNode.connect(this.analyser);
 
-    this.analyser.connect(this.audioContext.destination);
+    this.outputNode = this.pannerNode;
+
+    //this.analyser.connect(this.audioContext.destination);
 
     this.shadowRoot.querySelector("#balance").addEventListener("input", () => {
       //change the audio balance
@@ -353,6 +355,10 @@ class AudioPlayer extends HTMLElement {
     return this.analyser;
   }
 
+  getSourceNode() {
+    return this.pannerNode;
+  }
+
   setPlaylist(playlist) {
     this.playlist = playlist?.split(",") || [];
   }
@@ -372,6 +378,7 @@ class AudioPlayer extends HTMLElement {
     this.pannerNode.disconnect();
     this.pannerNode.connect(node);
     node.connect(this.audioContext.destination);
+    this.outputNode = node; 
   }
 }
 

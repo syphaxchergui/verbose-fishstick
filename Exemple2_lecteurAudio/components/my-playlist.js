@@ -1,26 +1,29 @@
 const template = `
 <style>
   .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      background-color: #000;
-      color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      min-width: 300px;
-      height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #000;
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%;
+    height: 360px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .subContainer {
     display: flex;
-      align-items: center;
-      justify-content: start;
-      padding: 20px;
-      border-radius: 5px;
-      width: 100%; 
-      flex-direction: column; 
+    align-items: center;
+    justify-content: start;
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%; 
+    flex-direction: column; 
   }
 
   .music {
@@ -45,18 +48,13 @@ const template = `
     width: 100%;
   }
 
-
-
 </style>
 
-<div class='container'>   
-
-
-<p style="font-size: 20px; font-weight: bold;">Playlist</p>
+  <div class='container'>   
+    <p style="font-size: 20px; font-weight: bold;">Playlist</p>
     <div class="subContainer">
-  
+    </div>
   </div>
-</div>
 `;
 
 class MyPlaylist extends HTMLElement {

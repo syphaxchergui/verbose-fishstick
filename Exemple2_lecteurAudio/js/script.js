@@ -12,7 +12,7 @@ function init() {
   //context
   equalizer.setContext(player.getContext());
   player.connectCustomNode(equalizer.getInput());
-  visualizer.setAudioContext(player.getContext(), player.getAnalyser());
+  visualizer.setAudioContext(player.getContext(), player.getSourceNode());
 
   player.setPlaylist(this.playlist.getPlaylist());
   player.setSrc(this.playlist.getCurrentMusic());

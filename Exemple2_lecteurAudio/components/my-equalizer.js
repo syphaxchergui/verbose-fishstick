@@ -1,25 +1,21 @@
 const template = `
 <style>
   .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      background-color: #000;
-      color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      max-width: 400px;
-      height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    color: #000;
+    padding: 20px;
+    width: 100%;
+    height: 360px;
   }
 
   .subContainer {
     display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      border-radius: 5px;
-      max-width: 400px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 5px;
   }
 
   .controles {
@@ -80,50 +76,70 @@ const template = `
     cursor: pointer;
   }
 
+  .preset-button {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+    margin: 5px;
+  }
+
+  .preset-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .preset-button:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .preset-button:active {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
 
 </style>
 
 <div class='container'>   
-
-
-<p style="font-size: 20px; font-weight: bold;">Equalizer</p>
-    <div class="subContainer">
+  <p style="font-size: 20px; font-weight: bold;">Equalizer</p>
+  <div class="subContainer">
     <div class="controles">
       <label>60Hz</label>
       <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
-      
       <output id="gain0">0 dB</output>
     </div>
 
     <div class="controles">
-    <label>170Hz</label>
-    <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
-<output id="gain1">0 dB</output>
-  </div>
+      <label>170Hz</label>
+      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <output id="gain1">0 dB</output>
+    </div>
 
-  <div class="controles">
-    <label>350Hz</label>
-    <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
-<output id="gain2">0 dB</output>
-  </div>
+    <div class="controles">
+      <label>350Hz</label>
+      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <output id="gain2">0 dB</output>
+    </div>
 
-  <div class="controles">
-    <label>1000Hz</label>
-    <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
-<output id="gain3">0 dB</output>
-  </div>
+    <div class="controles">
+      <label>1000Hz</label>
+      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <output id="gain3">0 dB</output>
+    </div>
 
-  <div class="controles">
-    <label>3500Hz</label>
-    <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
-<output id="gain4">0 dB</output>
-  </div>
+    <div class="controles">
+      <label>3500Hz</label>
+      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <output id="gain4">0 dB</output>
+    </div>
 
-  <div class="controles">
-    <label>10000Hz</label>
-    <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
-<output id="gain5">0 dB</output>
-  </div>
+    <div class="controles">
+      <label>10000Hz</label>
+      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <output id="gain5">0 dB</output>
+    </div>
   </div>
 </div>
 `;
@@ -137,6 +153,14 @@ class MyEqualizer extends HTMLElement {
 
     this.audioCtx;
     this.filters = [];
+    this.presets = [
+      { name: "Pop", gains: [-15, -10, 0, 10, 5, -5] },
+      { name: "Rock", gains: [-12, -8, 0, 6, 10, 4] },
+      { name: "Jazz", gains: [-8, -4, 0, 6, 4, 2] },
+      { name: "Classical", gains: [-4, 2, 6, 10, 8, 4] },
+      { name: "Metal", gains: [15, 10, 0, -10, -8, -4] },
+      { name: "Auto", gains: [0, 0, 0, 0, 0, 0] },
+    ];
   }
 
   setContext(context) {
@@ -177,6 +201,33 @@ class MyEqualizer extends HTMLElement {
       slider.addEventListener("input", (event) => {
         this.changeGain(event.target.value, index);
       });
+    });
+
+    this.createPresetButtons();
+  }
+
+  createPresetButtons() {
+    const presetContainer = document.createElement("div");
+    presetContainer.classList.add("preset-container");
+
+    this.presets.forEach((preset, index) => {
+      const presetButton = document.createElement("button");
+      presetButton.textContent = preset.name;
+      presetButton.classList.add("preset-button");
+      presetButton.addEventListener("click", () => {
+        this.applyPreset(index);
+      });
+      presetContainer.appendChild(presetButton);
+    });
+
+    this.shadowRoot.querySelector(".container").appendChild(presetContainer);
+  }
+
+  applyPreset(presetIndex) {
+    const preset = this.presets[presetIndex];
+    this.shadowRoot.querySelectorAll(".slider").forEach((slider, index) => {
+      slider.value = preset.gains[index];
+      this.changeGain(preset.gains[index], index);
     });
   }
 
