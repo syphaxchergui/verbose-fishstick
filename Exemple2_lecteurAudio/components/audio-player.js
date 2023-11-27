@@ -7,21 +7,33 @@ const template = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 5px;
-    padding: 20px;
+    padding: 10px 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     color: #000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
+
   button {
-      padding: 5px 10px;
-      border-radius: 5px;
-      border: 0.5px solid #ccc;
-      background-color: #fff;
-      cursor: pointer;
-      width: 55px;
+    width: 60px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+    padding: 8px 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin: 5px;
   }
+
+  button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
   .progressBarClass {
       display: flex;
       align-items: center;
@@ -214,7 +226,11 @@ const template = `
     <div class='progressBarClass'>
       <input type="range" min="0" max="100" value="0" class="sliderProgress" id="progressBar">
       <p id="time">0:00min</p>
-    </div>   
+    </div>  
+    
+    <div class='input-container'>
+      <input type="range" min="0" max="255" value="0" id="analyzerInput">
+    </div>
     
     <div id="animation">
 
@@ -297,6 +313,8 @@ class AudioPlayer extends HTMLElement {
           this.audio.duration;
       });
 
+     
+
     this.audio.addEventListener("ended", () => {
       this.audio.currentTime = 0;
       this.next();
@@ -314,25 +332,54 @@ class AudioPlayer extends HTMLElement {
 
     this.pannerNode = this.audioContext.createStereoPanner();
     lecteurAudioNode.connect(this.pannerNode);
-    this.pannerNode.connect(this.audioContext.destination);
+    //this.pannerNode.connect(this.audioContext.destination);
 
     this.analyser = this.audioContext.createAnalyser();
 
-    this.analyser.fftSize = 1024;
-    let bufferLength = this.analyser.frequencyBinCount;
-    let dataArray = new Uint8Array(bufferLength);
 
     this.pannerNode.connect(this.analyser);
 
-    this.outputNode = this.pannerNode;
+    // this.analyser.fftSize = 1024;
+    // let bufferLength = this.analyser.frequencyBinCount;
+    // let dataArray = new Uint8Array(bufferLength);
+    // this.outputNode = this.pannerNode;
 
-    //this.analyser.connect(this.audioContext.destination);
+    this.analyser.connect(this.audioContext.destination);
 
     this.shadowRoot.querySelector("#balance").addEventListener("input", () => {
       //change the audio balance
       this.pannerNode.pan.value =
         this.shadowRoot.querySelector("#balance").value;
     });
+
+    this.updateAnalyzerInput();
+  }
+
+  updateAnalyzerInput() {
+    this.analyser.fftSize = 256;
+    const analyserInput = this.shadowRoot.querySelector("#analyzerInput");
+    let dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+    console.log(dataArray)
+  
+    const update = () => {
+      this.analyser.getByteFrequencyData(dataArray);
+  
+      // Calculate the average value of the frequency data
+      const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+  
+      // Map the average value to the range [0, 255] for the input range
+      const mappedValue = Math.floor((average / 255) * 100);
+  
+      // Set the value of the input range
+      analyserInput.value = mappedValue;
+  
+      // Schedule the next update
+      requestAnimationFrame(update);
+    };
+  
+    // Start the animation loop
+    update();
   }
 
   next() {

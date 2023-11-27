@@ -12,26 +12,39 @@ const template = `
       z-index: -1;
     }
 
+    .preset-container::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Hide scrollbar for IE, Edge and Firefox */
     .preset-container {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 10px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      color: #000;
-      padding: 20px;
-      height: 360px;
-      width: 80%;
-      overflow-y: auto;
-      overflow-x: hidden;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
     }
 
-    .preset-container > button {
+    .preset-container {
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 10px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #000;
+      padding: 10px;
+      height: 350px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .preset-container > span {
       display: block;
       margin-bottom: 10px;
-      padding: 5px;
+      padding: 10px;
       border-radius: 5px;
       cursor: pointer;
       background-color: #fff;
       color: #000;
+      width: calc(100%-20px);
     }
 
     .button {
@@ -150,7 +163,9 @@ const template = `
   <div id="box">
     <button id="fullScreenButton" class='button' >Full Screen</button>
     <canvas class='container'></canvas>
-    <div> </div>
+    <div class='preset-container'>
+      <p style="font-size: 20px; font-weight: bold;">Visualizer Presets</p>
+    </div>
   </div>
 `;
 
@@ -202,18 +217,18 @@ class ButterchurnVisualizer extends HTMLElement {
     const presetList = Object.keys(presets);
     console.log(presetList);
     // Render the preset list in your desired way
-    const presetContainer = document.createElement("div");
-    presetContainer.classList.add("preset-container");
+    const presetContainer = this.shadowRoot.querySelector(".preset-container");
+    // presetContainer.classList.add("preset-container");
 
     // Add title
-    const title = document.createElement("p");
-    title.textContent = "Visualizer Presets";
-    title.style.fontSize = "20px";
-    title.style.fontWeight = "bold";
-    presetContainer.appendChild(title);
+    // const title = document.createElement("p");
+    // title.textContent = "Visualizer Presets";
+    // title.style.fontSize = "20px";
+    // title.style.fontWeight = "bold";
+    // presetContainer.appendChild(title);
 
     presetList.forEach((presetName) => {
-      const presetButton = document.createElement("button");
+      const presetButton = document.createElement("span");
       presetButton.textContent = presetName;
       presetButton.addEventListener("click", () => {
         this.applyPreset(presetName);

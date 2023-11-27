@@ -1,19 +1,22 @@
 const template = `
 <style>
   .container {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #000;
-    padding: 20px;
-    height: 360px;
+    padding: 10px;
+    height: 350px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .subContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 10px;
     border-radius: 5px;
   }
 
@@ -23,7 +26,7 @@ const template = `
     flex-direction: column-reverse;
     justify-content: center;
     gap: 6px;
-    width: 100%;
+    width: 80px;
     position: relative;
     margin-bottom: 16px;
 } 
@@ -41,47 +44,55 @@ const template = `
     flex: 0.1;
   }
 
-  .slider {
-    -webkit-appearance: slider-vertical;
+  .preset-container {
     width: 100%;
-    height: 10px;
-    border-radius: 2px;  
-    background: #f0f0f0;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .slider:hover {
-    opacity: 1; /* Fully shown on mouse-over */
-  }
+  // .slider {
+  //   -webkit-appearance: slider-vertical;
+  //   width: 100%;
+  //   height: 10px;
+  //   border-radius: 2px;  
+  //   background: #f0f0f0;
+  //   outline: none;
+  //   opacity: 0.7;
+  //   -webkit-transition: .2s;
+  //   transition: opacity .2s;
+  // }
+
+  // .slider:hover {
+  //   opacity: 1; /* Fully shown on mouse-over */
+  // }
   
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: slider-vertical;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%; 
-    background: black;
-    cursor: pointer;
-  }
+  // .slider::-webkit-slider-thumb {
+  //   -webkit-appearance: slider-vertical;
+  //   appearance: none;
+  //   width: 20px;
+  //   height: 20px;
+  //   border-radius: 50%; 
+  //   background: black;
+  //   cursor: pointer;
+  // }
   
-  .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: black;
-    cursor: pointer;
-  }
+  // .slider::-moz-range-thumb {
+  //   width: 20px;
+  //   height: 20px;
+  //   border-radius: 50%;
+  //   background: black;
+  //   cursor: pointer;
+  // }
 
   .preset-button {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.2);
     border: none;
     border-radius: 5px;
     color: #000;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 8px 16px;
+    font-weight: bold;
     transition: background-color 0.3s ease;
     margin: 5px;
   }
@@ -92,7 +103,7 @@ const template = `
 
   .preset-button:focus {
     outline: none;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255);
   }
 
   .preset-button:active {
@@ -106,37 +117,109 @@ const template = `
   <div class="subContainer">
     <div class="controles">
       <label>60Hz</label>
-      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <webaudio-slider 
+        src="./components/images/knobs/vsliderbody.png" 
+        knobsrc="./components/images/knobs/vsliderknob.png"
+        class="slider"
+        value="0"
+        step="1" 
+        min="-30"
+        max="30"
+        width="24"
+        height="128"
+        direction="vert"
+        >
+      </webaudio-slider>
       <output id="gain0">0 dB</output>
     </div>
 
     <div class="controles">
       <label>170Hz</label>
-      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <webaudio-slider 
+        src="./components/images/knobs/vsliderbody.png" 
+        knobsrc="./components/images/knobs/vsliderknob.png"
+        class="slider"
+        value="0"
+        step="1" 
+        min="-30"
+        max="30"
+        width="24"
+        height="128"
+        direction="vert"
+        >
+      </webaudio-slider>
       <output id="gain1">0 dB</output>
     </div>
 
     <div class="controles">
       <label>350Hz</label>
-      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <webaudio-slider 
+        src="./components/images/knobs/vsliderbody.png" 
+        knobsrc="./components/images/knobs/vsliderknob.png"
+        class="slider"
+        value="0"
+        step="1" 
+        min="-30"
+        max="30"
+        width="24"
+        height="128"
+        direction="vert"
+        >
+      </webaudio-slider>
       <output id="gain2">0 dB</output>
     </div>
 
     <div class="controles">
       <label>1000Hz</label>
-      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <webaudio-slider 
+      src="./components/images/knobs/vsliderbody.png" 
+      knobsrc="./components/images/knobs/vsliderknob.png"
+      class="slider"
+      value="0"
+      step="1" 
+      min="-30"
+      max="30"
+      width="24"
+      height="128"
+      direction="vert"
+      >
+    </webaudio-slider>
       <output id="gain3">0 dB</output>
     </div>
 
     <div class="controles">
       <label>3500Hz</label>
-      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <webaudio-slider 
+        src="./components/images/knobs/vsliderbody.png" 
+        knobsrc="./components/images/knobs/vsliderknob.png"
+        class="slider"
+        value="0"
+        step="1" 
+        min="-30"
+        max="30"
+        width="24"
+        height="128"
+        direction="vert"
+        >
+      </webaudio-slider>
       <output id="gain4">0 dB</output>
     </div>
 
     <div class="controles">
       <label>10000Hz</label>
-      <input type="range" class="slider" value="0" step="1" min="-30" max="30"></input>
+      <webaudio-slider 
+        src="./components/images/knobs/vsliderbody.png" 
+        knobsrc="./components/images/knobs/vsliderknob.png"
+        class="slider"
+        value="0"
+        step="1" 
+        min="-30"
+        max="30"
+        width="24"
+        height="128"
+        direction="vert"
+        >
+      </webaudio-slider>
       <output id="gain5">0 dB</output>
     </div>
   </div>

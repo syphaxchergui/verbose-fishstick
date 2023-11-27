@@ -5,15 +5,18 @@ const template = `
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #000;
-    padding: 20px;
-    border-radius: 5px;
-    height: 360px;
+    padding: 10px;
+    border-radius: 10px;
+    height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
-  }
+    min-width: 300px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+ }
 
   .subContainer {
     display: flex;
