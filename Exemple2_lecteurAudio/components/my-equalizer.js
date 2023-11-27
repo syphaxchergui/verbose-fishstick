@@ -6,7 +6,6 @@ const template = `
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     color: #000;
     padding: 20px;
-    width: 100%;
     height: 360px;
   }
 

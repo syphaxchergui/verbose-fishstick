@@ -19,13 +19,13 @@ const template = `
       color: #000;
       padding: 20px;
       height: 360px;
+      width: 80%;
       overflow-y: auto;
       overflow-x: hidden;
     }
 
     .preset-container > button {
       display: block;
-      width: 100%;
       margin-bottom: 10px;
       padding: 5px;
       border-radius: 5px;
