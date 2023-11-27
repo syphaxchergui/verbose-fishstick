@@ -1,16 +1,18 @@
 window.onload = init;
 
-let player, equalizer;
+let player, equalizer, playlist, visualizer;
 function init() {
   console.log("page chargée");
 
   player = document.querySelector("#audioPlayer");
   equalizer = document.querySelector("#equalizer");
   playlist = document.querySelector("#playlist");
-
+  visualizer = document.querySelector("#visualizer-container");
+  
   //context
   equalizer.setContext(player.getContext());
   player.connectCustomNode(equalizer.getInput());
+  visualizer.setAudioContext(player.getContext(), player.getAnalyser());
 
   player.setPlaylist(this.playlist.getPlaylist());
   player.setSrc(this.playlist.getCurrentMusic());

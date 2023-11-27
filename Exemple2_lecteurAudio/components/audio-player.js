@@ -313,15 +313,14 @@ class AudioPlayer extends HTMLElement {
 
     this.pannerNode = this.audioContext.createStereoPanner();
     pannerMediaElementSource.connect(this.pannerNode);
-    //this.pannerNode.connect(this.audioContext.destination);
+    this.pannerNode.connect(this.audioContext.destination);
 
-    // Create an this.analyser node
+    // Create an analyser node
     this.analyser = this.audioContext.createAnalyser();
 
-    // Try changing for lower values: 512, 256, 128, 64...
     this.analyser.fftSize = 1024;
-    bufferLength = this.analyser.frequencyBinCount;
-    dataArray = new Uint8Array(bufferLength);
+    let bufferLength = this.analyser.frequencyBinCount;
+    let dataArray = new Uint8Array(bufferLength);
 
     this.pannerNode.connect(this.analyser);
 
@@ -348,6 +347,10 @@ class AudioPlayer extends HTMLElement {
 
   getContext() {
     return this.audioContext;
+  }
+
+  getAnalyser() {
+    return this.analyser;
   }
 
   setPlaylist(playlist) {

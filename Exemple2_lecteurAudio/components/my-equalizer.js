@@ -149,7 +149,6 @@ class MyEqualizer extends HTMLElement {
   }
 
   getInput() {
-    console.log(this.filters[0]);
     return this.filters[0];
   }
 

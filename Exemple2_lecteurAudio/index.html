@@ -8,6 +8,11 @@
     <script src="components/audio-player.js" type="module"></script>
     <script src="components/my-equalizer.js" type="module"></script>
     <script src="components/my-playlist.js" type="module"></script>
+    <script src="components/butterchurn-visualizer.js" type="module"></script>
+    <script type="text/javascript" src="https://unpkg.com/butterchurn"></script>
+    <script type="text/javascript" src="https://unpkg.com/butterchurn-presets"></script>
+    <script type="text/javascript" src="https://unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js"></script>
+
     <style>
       * {
         font-family: Arial, sans-serif;
@@ -24,6 +29,7 @@
     <div style="display: flex; gap: 10px;">
       <my-equalizer id="equalizer"></my-equalizer>
       <my-playlist id="playlist"></my-playlist>
+      <butterchurn-visualizer id="visualizer-container"></butterchurn-visualizer>
     </div>
   
   </body>

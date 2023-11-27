@@ -9,7 +9,7 @@ const template = `
       color: #fff;
       padding: 20px;
       border-radius: 5px;
-      width: 100%; 
+      min-width: 300px;
       height: 100%;
   }
 
