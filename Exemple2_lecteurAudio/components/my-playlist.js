@@ -10,13 +10,23 @@ const template = `
     color: #000;
     padding: 10px;
     border-radius: 10px;
-    height: 350px;
+    height: 360px;
     overflow-y: auto;
     overflow-x: hidden;
     min-width: 300px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
  }
+
+  .container::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 
   .subContainer {
     display: flex;

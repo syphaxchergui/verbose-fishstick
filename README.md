@@ -1,5 +1,5 @@
 # Audio Player
-![Alt text](./Screenshots/image.png)
+![Alt text](image.png)
 
 This project is an audio player built using web components and Web Audio API. It includes an equalizer with predefined modes such as pop, metal, and more. Additionally, it features a Butterchurn visualizer with presets for enhanced audio visualization. The audio player also includes a playlist component for managing and playing a list of audio files.
 

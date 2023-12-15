@@ -9,7 +9,7 @@ const template = `
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 30px 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     color: #000;
@@ -42,16 +42,24 @@ const template = `
       width: 100%;
   } 
 
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
   .controles {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 6px;
     width: 100%;
     position: relative;
 } 
 
-  .controles p {
+
+  .controles > p {
     flex: 0.2;
   }
 
@@ -63,10 +71,20 @@ const template = `
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 36px;
     width: 100%;
     position: relative;
     margin-bottom: 16px;
+    margin-top: 24px;
+
+  }
+
+  .flex-row: {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    align-text: center;
   }
 
   .slider {
@@ -160,42 +178,11 @@ const template = `
   }
 </style>
 <div class='container'>   
-    <p style="font-size: 20px; font-weight: bold;" id="title">Audio Player</p>
- 
-    <div class="button-group">
-        <button id="prev">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M10.354 3.646a.5.5 0 0 1 0 .708L6.707 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0z"/>
-            </svg>\
-        </button>
-
-        <button id="substractFive">
-            - 5s
-        </button>
-        <button id="play">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-              <path d="M4.905 14.21a1 1 0 0 1-1.578-.814l7-5a1 1 0 0 1 0-1.592l-7-5A1 1 0 0 1 4 3v10a1 1 0 0 1 .905 1.21z"/>
-            </svg>
-
-        </button>
-        <button id="pause">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
-              <rect width="4" height="12" x="3" y="2" rx="1"/>
-              <rect width="4" height="12" x="9" y="2" rx="1"/>
-            </svg>
-        </button>
-        <button id="addFive">
-            + 5s
-        </button>    
-        
-        <button id="next">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M5.646 3.646a.5.5 0 0 0 0 .708L9.293 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0z"/>
-      </svg>
-      </button>
-    </div>
+    
 
     <div class="conroles-container">
+
+    <div>
       <div class='controles'>
         <p>Volume</p>
         <webaudio-knob 
@@ -221,16 +208,64 @@ const template = `
           tooltip="Balance %d">
         </webaudio-knob>
       </div>
+      </div>
+
+      <div class="flex-row">
+        <p style="font-size: 20px; font-weight: bold; text-align: center;" id="title">Audio Player</p>
+ 
+        <div class="button-group">
+            <button id="prev">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.354 3.646a.5.5 0 0 1 0 .708L6.707 8l3.647 3.646a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0z"/>
+                </svg>\
+            </button>
+
+            <button id="substractFive">
+                - 5s
+            </button>
+            <button id="play">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                  <path d="M4.905 14.21a1 1 0 0 1-1.578-.814l7-5a1 1 0 0 1 0-1.592l-7-5A1 1 0 0 1 4 3v10a1 1 0 0 1 .905 1.21z"/>
+                </svg>
+
+            </button>
+            <button id="pause">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                  <rect width="4" height="12" x="3" y="2" rx="1"/>
+                  <rect width="4" height="12" x="9" y="2" rx="1"/>
+                </svg>
+            </button>
+            <button id="addFive">
+                + 5s
+            </button>    
+            
+            <button id="next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M5.646 3.646a.5.5 0 0 0 0 .708L9.293 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0z"/>
+          </svg>
+          </button>
+        </div>
+    </div>
+
+
+  
+        <webaudio-knob 
+          src="./components/images//Vintage_VUMeter_2.png" 
+          sprites="50" 
+          value="0" 
+          id="analyzerInput"
+          diameter="120" 
+          style="height: 120px;">
+          </webaudio-knob>
+     
+
+      
     </div>
 
     <div class='progressBarClass'>
       <input type="range" min="0" max="100" value="0" class="sliderProgress" id="progressBar">
       <p id="time">0:00min</p>
     </div>  
-    
-    <div class='input-container'>
-      <input type="range" min="0" max="255" value="0" id="analyzerInput">
-    </div>
     
     <div id="animation">
 
@@ -313,7 +348,7 @@ class AudioPlayer extends HTMLElement {
           this.audio.duration;
       });
 
-     
+
 
     this.audio.addEventListener("ended", () => {
       this.audio.currentTime = 0;
@@ -339,10 +374,6 @@ class AudioPlayer extends HTMLElement {
 
     this.pannerNode.connect(this.analyser);
 
-    // this.analyser.fftSize = 1024;
-    // let bufferLength = this.analyser.frequencyBinCount;
-    // let dataArray = new Uint8Array(bufferLength);
-    // this.outputNode = this.pannerNode;
 
     this.analyser.connect(this.audioContext.destination);
 
@@ -356,28 +387,32 @@ class AudioPlayer extends HTMLElement {
   }
 
   updateAnalyzerInput() {
-    this.analyser.fftSize = 256;
+    this.analyser.fftSize = 1024; // Increase the FFT size to capture more detailed frequency data
     const analyserInput = this.shadowRoot.querySelector("#analyzerInput");
     let dataArray = new Uint8Array(this.analyser.frequencyBinCount);
 
-    console.log(dataArray)
-  
     const update = () => {
       this.analyser.getByteFrequencyData(dataArray);
-  
-      // Calculate the average value of the frequency data
-      const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
-  
-      // Map the average value to the range [0, 255] for the input range
-      const mappedValue = Math.floor((average / 255) * 100);
-  
+
+      // Sort the frequency data in ascending order
+      const sortedData = [...dataArray].sort((a, b) => a - b);
+
+      // Calculate the index of the 95th percentile
+      const percentileIndex = Math.floor(sortedData.length * 0.95);
+
+      // Get the value at the 95th percentile
+      const percentileValue = sortedData[percentileIndex];
+
+      // Map the percentile value to the range [0, 255] for the input range
+      const mappedValue = Math.floor((percentileValue / 255) * 100);
+
       // Set the value of the input range
       analyserInput.value = mappedValue;
-  
+
       // Schedule the next update
       requestAnimationFrame(update);
     };
-  
+
     // Start the animation loop
     update();
   }
@@ -424,15 +459,15 @@ class AudioPlayer extends HTMLElement {
   connectCustomNode(node) {
     this.pannerNode.disconnect();
     this.pannerNode.connect(node);
-    node.connect(this.audioContext.destination);
-    this.outputNode = node; 
+    node.connect(this.analyser);
+    this.analyser.connect(this.audioContext.destination);
+    this.outputNode = node;
   }
 }
 
 function formatSecondsToMinutes(seconds) {
-  return `${Math.floor(seconds / 60)}:${
-    seconds > 9 ? Math.floor(seconds % 60) : `0${Math.floor(seconds % 60)}`
-  }`;
+  return `${Math.floor(seconds / 60)}:${seconds > 9 ? Math.floor(seconds % 60) : `0${Math.floor(seconds % 60)}`
+    }`;
 }
 
 
