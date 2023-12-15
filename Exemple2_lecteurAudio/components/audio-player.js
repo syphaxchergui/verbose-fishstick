@@ -9,7 +9,7 @@ const template = `
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 5px;
-    padding: 30px 20px;
+    padding: 10px 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     color: #000;
@@ -173,6 +173,14 @@ const template = `
     gap: 5px;
   }
 
+  #bar-animation { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 60px;
+  }
+
   #myCanvas {
     border:1px solid;
   }
@@ -245,21 +253,16 @@ const template = `
           </svg>
           </button>
         </div>
+        <div id="bar-animation"></div>
     </div>
-
-
-  
-        <webaudio-knob 
-          src="./components/images//Vintage_VUMeter_2.png" 
-          sprites="50" 
-          value="0" 
-          id="analyzerInput"
-          diameter="120" 
-          style="height: 120px;">
-          </webaudio-knob>
-     
-
-      
+      <webaudio-knob 
+        src="./components/images/Vintage_VUMeter_2.png" 
+        sprites="50" 
+        value="0" 
+        id="analyzerInput"
+        diameter="120" 
+        style="height: 120px;">
+      </webaudio-knob>
     </div>
 
     <div class='progressBarClass'>
@@ -383,12 +386,13 @@ class AudioPlayer extends HTMLElement {
         this.shadowRoot.querySelector("#balance").value;
     });
 
-    this.updateAnalyzerInput();
+    this.updateAnimations();
   }
 
-  updateAnalyzerInput() {
+  updateAnimations() {
     this.analyser.fftSize = 1024; // Increase the FFT size to capture more detailed frequency data
     const analyserInput = this.shadowRoot.querySelector("#analyzerInput");
+    const barAnimation = this.shadowRoot.querySelector("#bar-animation");
     let dataArray = new Uint8Array(this.analyser.frequencyBinCount);
 
     const update = () => {
@@ -409,6 +413,24 @@ class AudioPlayer extends HTMLElement {
       // Set the value of the input range
       analyserInput.value = mappedValue;
 
+      barAnimation.innerHTML = "";
+
+      const numBars = 10; // Number of bars to display
+      const barWidth = 20; // Width of each bar
+      const barMargin = 6; // Margin between each bar
+
+      for (let i = 0; i < numBars; i++) {
+        const barHeight = (dataArray[i] / 255) * 100;
+        const bar = document.createElement("div");
+        bar.style.width = `${barWidth}px`;
+        bar.style.height = `${barHeight}%`;
+        bar.style.marginRight = `${barMargin}px`;
+        const hue = Math.floor(Math.random() * 360); // Random hue value between 0 and 360
+        const lightness = Math.floor(Math.random() * 11) + 40; // Random lightness value between 40 and 50
+        bar.style.backgroundColor = `hsla(${hue}, 0%, ${lightness}%, 0.3)`; // Set the background color using HSLA values with opacity
+        bar.style.boxShadow = `0 0 10px rgba(255, 255, 255, 0.3)`; // Glassmorphisme effect
+        barAnimation.appendChild(bar);
+      }
       // Schedule the next update
       requestAnimationFrame(update);
     };

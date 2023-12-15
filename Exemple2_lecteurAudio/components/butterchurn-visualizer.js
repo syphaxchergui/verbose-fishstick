@@ -29,7 +29,7 @@ const template = `
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #000;
       padding: 10px;
-      height: 360px;
+      height: 350px;
       overflow-y: auto;
       overflow-x: hidden;
       backdrop-filter: blur(10px);

@@ -10,7 +10,7 @@ const template = `
     color: #000;
     padding: 10px;
     border-radius: 10px;
-    height: 360px;
+    height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
     min-width: 300px;
