@@ -1,10 +1,14 @@
 # Audio Player
-![Alt text](image.png)
+![Alt text](/Screenshots/image.png)
 
 This project is an audio player built using web components and Web Audio API. It includes an equalizer with predefined modes such as pop, metal, and more. Additionally, it features a Butterchurn visualizer with presets for enhanced audio visualization. The audio player also includes a playlist component for managing and playing a list of audio files.
 
 To enhance the visual elements of the audio player, we utilize the [webaudio-controls](https://g200kg.github.io/webaudio-controls/docs/index.html) library. This library provides a set of customizable controls for audio applications, including rotation buttons and other visual elements.
 
+
+## Deployement
+
+The audio player project is deployed on Vercel and can be accessed using the following link: [verbose-fishstick.vercel.app/](https://verbose-fishstick.vercel.app/). 
 
 ## Features
 
